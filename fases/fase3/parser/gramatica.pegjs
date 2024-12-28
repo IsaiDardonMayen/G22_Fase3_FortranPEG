@@ -54,17 +54,12 @@ expresiones
   / val:$literales isCase:"i"? {
     return new n.String(val.replace(/['"]/g, ''), isCase);
   }
-  / "(" _ opciones:opciones _ ")"{
-    return new n.grupo(opciones);
-  }
-
-  / exprs:corchetes isCase:"i"?{
-    //console.log("Corchetes", exprs);
-    return new n.Corchetes(exprs, isCase);
-
+  / "(" _ @opciones _ ")"
+  / chars:clase isCase:"i"? {
+    return new n.Clase(chars, isCase);
   }
   / "." {
-    return new n.Any(true);
+    return new n.Any();
   }
   / "!."{
     return new n.finCadena();
@@ -84,16 +79,14 @@ conteo = "|" _ (numero / id:identificador) _ "|"
 // delimitador =  "," _ expresion
 
 // Regla principal que analiza corchetes con contenido
-corchetes
-    = "[" contenido:(rango / contenido)+ "]" {
-        return contenido;
-    }
-
+clase
+  = "[" @contenidoClase+ "]"
 // Regla para validar un rango como [A-Z]
-rango
-    = inicio:$caracter "-" fin:$caracter {
-        return new  n.rango(inicio, fin);
-    }
+contenidoClase
+  = bottom:$caracter "-" top:$caracter {
+    return new n.rango(bottom, top);
+  }
+  / $caracter
 
 // Regla para caracteres individuales
 caracter

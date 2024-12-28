@@ -213,31 +213,6 @@ export class rango {
 /**
  * @implements {Node}
  */
-export class Corchetes {
-    /**
-     *
-     * @param {Node} exprs
-	 * @param {boolean=} isCase
-     */
-    constructor(exprs, isCase) {
-        this.exprs = exprs;
-		this.isCase = isCase;
-    }
-
-    /**
-     * @template T
-     * @param {Visitor<T>} visitor
-     * @returns {T}
-     */
-    accept(visitor) {
-        return visitor.visitCorchetes(this);
-    }
-}
-    
-
-/**
- * @implements {Node}
- */
 export class idRel {
     /**
      *

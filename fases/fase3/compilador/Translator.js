@@ -107,7 +107,7 @@ export default class FortranTranslator {
             .filter((char) => typeof char === 'string')
             .map((char) => `'${char}'`);
         const ranges = node.chars
-            .filter((char) => char instanceof CST.Rango)
+            .filter((char) => char instanceof CST.rango)
             .map((range) => range.accept(this));
         if (set.length !== 0) {
             characterClass = [`acceptSet([${set.join(',')}])`];
@@ -121,7 +121,7 @@ export default class FortranTranslator {
      * @param {CST.rango} node
      * @this {Visitor}
      */
-    visitRango(node) {
+    visitrango(node) {
         return `acceptRange('${node.bottom}', '${node.top}')`;
     }
     /**
@@ -144,8 +144,5 @@ export default class FortranTranslator {
      */
     visitfinCadena(node) {
         return 'acceptEOF()';
-    }
-    visitCorchetes(node) {
-        return ''
     }
 }

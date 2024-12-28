@@ -83,15 +83,6 @@ export default class Visitor {
          * @param {Node} node
          * @returns {T}
          */
-        visitCorchetes(node){
-            throw new Error('Implement in subclass');
-        }
-	
-        /**
-         * @abstract
-         * @param {Node} node
-         * @returns {T}
-         */
         visitidRel(node){
             throw new Error('Implement in subclass');
         }
