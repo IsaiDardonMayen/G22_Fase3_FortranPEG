@@ -1,1 +1,1 @@
-## Fase 2: generación de nextsym()
+## Fase 3: generación de nextsym()
