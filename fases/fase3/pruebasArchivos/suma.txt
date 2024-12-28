@@ -1,0 +1,5 @@
+sum = num+ "+" num+ . / s "+" s
+
+
+num = [0-9]
+s =[a-z]

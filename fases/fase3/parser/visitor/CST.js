@@ -165,7 +165,30 @@ export class Clase {
 /**
  * @implements {Node}
  */
-export class Rango {
+export class literalRango {
+    /**
+     *
+     * @param {string} bottom
+     */
+    constructor(bottom) {
+        this.bottom = bottom;
+    }
+
+    /**
+     * @template T
+     * @param {Visitor<T>} visitor
+     * @returns {T}
+     */
+    accept(visitor) {
+        return visitor.visitliteralRango(this);
+    }
+}
+    
+
+/**
+ * @implements {Node}
+ */
+export class rango {
     /**
      *
      * @param {string} bottom
@@ -182,7 +205,7 @@ export class Rango {
      * @returns {T}
      */
     accept(visitor) {
-        return visitor.visitRango(this);
+        return visitor.visitrango(this);
     }
 }
     
@@ -190,7 +213,32 @@ export class Rango {
 /**
  * @implements {Node}
  */
-export class Identificador {
+export class Corchetes {
+    /**
+     *
+     * @param {Node} exprs
+	 * @param {boolean=} isCase
+     */
+    constructor(exprs, isCase) {
+        this.exprs = exprs;
+		this.isCase = isCase;
+    }
+
+    /**
+     * @template T
+     * @param {Visitor<T>} visitor
+     * @returns {T}
+     */
+    accept(visitor) {
+        return visitor.visitCorchetes(this);
+    }
+}
+    
+
+/**
+ * @implements {Node}
+ */
+export class idRel {
     /**
      *
      * @param {string} id
@@ -205,7 +253,7 @@ export class Identificador {
      * @returns {T}
      */
     accept(visitor) {
-        return visitor.visitIdentificador(this);
+        return visitor.visitidRel(this);
     }
 }
     
@@ -213,7 +261,7 @@ export class Identificador {
 /**
  * @implements {Node}
  */
-export class Punto {
+export class Any {
     /**
      *
     
@@ -228,7 +276,7 @@ export class Punto {
      * @returns {T}
      */
     accept(visitor) {
-        return visitor.visitPunto(this);
+        return visitor.visitAny(this);
     }
 }
     
@@ -236,7 +284,7 @@ export class Punto {
 /**
  * @implements {Node}
  */
-export class Fin {
+export class finCadena {
     /**
      *
     
@@ -251,7 +299,7 @@ export class Fin {
      * @returns {T}
      */
     accept(visitor) {
-        return visitor.visitFin(this);
+        return visitor.visitfinCadena(this);
     }
 }
     

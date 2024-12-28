@@ -1,7 +1,7 @@
 import FortranTranslator from './Translator.js';
 
-/** @typedef {import('../visitor/CST.js').Producciones} Produccion*/
-/** @typedef {import('../visitor/Visitor.js').default<string>} Visitor*/
+/** @typedef {import('../parser/visitor/CST.js').Producciones} Produccion*/
+/** @typedef {import('../parser/visitor/Visitor.js').default<string>} Visitor*/
 /**
  *
  * @param {Produccion[]} cst

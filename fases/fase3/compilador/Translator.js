@@ -1,7 +1,7 @@
 import * as CST from '../parser/visitor/CST.js';
 
 /**
- * @typedef {import('../visitor/Visitor.js').default<string>} Visitor
+ * @typedef {import('../parser/visitor/Visitor.js').default<string>} Visitor
  */
 /**
  * @implements {Visitor}
@@ -118,31 +118,34 @@ export default class FortranTranslator {
         return characterClass.join(' .or. '); // acceptSet(['a','b','c']) .or. acceptRange('0','9') .or. acceptRange('A','Z')
     }
     /**
-     * @param {CST.Rango} node
+     * @param {CST.rango} node
      * @this {Visitor}
      */
     visitRango(node) {
         return `acceptRange('${node.bottom}', '${node.top}')`;
     }
     /**
-     * @param {CST.Identificador} node
+     * @param {CST.idRel} node
      * @this {Visitor}
      */
-    visitIdentificador(node) {
+    visitidRel(node) {
         return `peg_${node.id}()`;
     }
     /**
-     * @param {CST.Punto} node
+     * @param {CST.Any} node
      * @this {Visitor}
      */
-    visitPunto(node) {
+    visitAny(node) {
         return 'acceptPeriod()';
     }
     /**
-     * @param {CST.Fin} node
+     * @param {CST.finCadena} node
      * @this {Visitor}
      */
-    visitFin(node) {
+    visitfinCadena(node) {
         return 'acceptEOF()';
+    }
+    visitCorchetes(node) {
+        return ''
     }
 }

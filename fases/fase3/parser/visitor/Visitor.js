@@ -65,7 +65,7 @@ export default class Visitor {
          * @param {Node} node
          * @returns {T}
          */
-        visitRango(node){
+        visitliteralRango(node){
             throw new Error('Implement in subclass');
         }
 	
@@ -74,7 +74,7 @@ export default class Visitor {
          * @param {Node} node
          * @returns {T}
          */
-        visitIdentificador(node){
+        visitrango(node){
             throw new Error('Implement in subclass');
         }
 	
@@ -83,7 +83,7 @@ export default class Visitor {
          * @param {Node} node
          * @returns {T}
          */
-        visitPunto(node){
+        visitCorchetes(node){
             throw new Error('Implement in subclass');
         }
 	
@@ -92,7 +92,25 @@ export default class Visitor {
          * @param {Node} node
          * @returns {T}
          */
-        visitFin(node){
+        visitidRel(node){
+            throw new Error('Implement in subclass');
+        }
+	
+        /**
+         * @abstract
+         * @param {Node} node
+         * @returns {T}
+         */
+        visitAny(node){
+            throw new Error('Implement in subclass');
+        }
+	
+        /**
+         * @abstract
+         * @param {Node} node
+         * @returns {T}
+         */
+        visitfinCadena(node){
             throw new Error('Implement in subclass');
         }
 }
