@@ -96,26 +96,34 @@ editor.onDidChangeModelContent(() => {
 
 let downloadHappening = false;
 const button = document.getElementById('ButtomDownload');
-button.addEventListener('click', () => {
-    if (downloadHappening) return;
-    if (!cst) {
-        alert('Escribe una gramatica valida');
+button.addEventListener('click', async (event) => {
+    if (downloadHappening) {
+        event.preventDefault(); // Previene la descarga duplicada
         return;
     }
+    if (!cst) {
+        alert('Escribe una gramatica valida');
+        event.preventDefault(); // Previene la acción del clic si hay error
+        return;
+    }
+    
+    downloadHappening = true;
     let url;
-    generateParser(cst)
-        .then((fileContents) => {
-            const blob = new Blob([fileContents], { type: 'text/plain' });
-            url = URL.createObjectURL(blob);
-            button.href = url;
-            downloadHappening = true;
-            button.click();
-        })
-        .finally(() => {
-            URL.revokeObjectURL(url);
-            button.href = '#';
-            downloadHappening = false;
-        });
+    try {
+        const fileContents = await generateParser(cst);
+        const blob = new Blob([fileContents], { type: 'text/plain' });
+        url = URL.createObjectURL(blob);
+        button.href = url;
+        button.download = 'parser.f90'; // Cambia 'parser.txt' por el nombre deseado del archivo
+    } catch (error) {
+        console.error('Error al generar el archivo:', error);
+    } finally {
+        downloadHappening = false;
+        if (url) {
+            // Retrasa la revocación para garantizar la descarga
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+    }
 });
 
 // CSS personalizado para resaltar el error y agregar un warning

@@ -19,14 +19,13 @@ export default class FortranTranslator {
 
             accept = .false.
             ${node.expr.accept(this)}
-            ${
-                node.start
-                    ? `
+            ${node.start
+                ? `
                     if (.not. acceptEOF()) then
                         return
                     end if
                     `
-                    : ''
+                : ''
             }
             accept = .true.
         end function peg_${node.id}
@@ -41,14 +40,14 @@ export default class FortranTranslator {
         do i = 0, ${node.exprs.length}
             select case(i)
                 ${node.exprs
-                    .map(
-                        (expr, i) => `
+                .map(
+                    (expr, i) => `
                         case(${i})
                             ${expr.accept(this)}
                             exit
                         `
-                    )
-                    .join('\n')}
+                )
+                .join('\n')}
             case default
                 return
             end select
@@ -75,6 +74,14 @@ export default class FortranTranslator {
                 if (.not. (${condition})) then
                     cycle
                 end if
+                do while (.not. cursor > len(input))
+                    if (.not. (${condition})) then
+                        exit
+                    end if
+                end do
+                `;
+            case '*': // Cero o más
+                return `
                 do while (.not. cursor > len(input))
                     if (.not. (${condition})) then
                         exit
