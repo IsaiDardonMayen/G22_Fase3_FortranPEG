@@ -88,6 +88,14 @@ export default class FortranTranslator {
                     end if
                 end do
                 `;
+            case '?': // Cero o uno
+                return `
+                if (.not. (${condition})) then
+                    cycle
+                end if 
+                `;
+
+            
             default:
                 return `
                 if (.not. (${condition})) then
