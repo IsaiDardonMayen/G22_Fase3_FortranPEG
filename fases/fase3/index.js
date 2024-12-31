@@ -4,7 +4,9 @@ import Tokenizer from './parser/visitor/Tokenizador.js';
 
 import { ErrorReglas } from './parser/error.js';
 
-import generateParser from './compilador/utilidades.js';
+import {generateParser} from './compilador/utilidades.js';
+/** @typedef {import('./parser/visitor/CST.js').Grammar} Grammar*/
+/** @typedef {import('./parser/visitor/Visitor.js').default<string>} Visitor*/
 
 export let ids = [];
 export let usos = [];
