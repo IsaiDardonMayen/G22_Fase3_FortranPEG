@@ -13,7 +13,32 @@
 /**
  * @implements {Node}
  */
-export class Producciones {
+export class Grammar {
+    /**
+     *
+     * @param {Regla[]} rules
+	 * @param {{ before: string; after?: string }=} globalCode
+     */
+    constructor(rules, globalCode) {
+        this.rules = rules;
+		this.globalCode = globalCode;
+    }
+
+    /**
+     * @template T
+     * @param {Visitor<T>} visitor
+     * @returns {T}
+     */
+    accept(visitor) {
+        return visitor.visitGrammar(this);
+    }
+}
+    
+
+/**
+ * @implements {Node}
+ */
+export class Regla {
     /**
      *
      * @param {string} id
@@ -34,7 +59,7 @@ export class Producciones {
      * @returns {T}
      */
     accept(visitor) {
-        return visitor.visitProducciones(this);
+        return visitor.visitRegla(this);
     }
 }
     
@@ -68,10 +93,12 @@ export class Opciones {
 export class Union {
     /**
      *
-     * @param {Expresion[]} exprs
+     * @param {Node[]} exprs
+	 * @param {Predicate=} action
      */
-    constructor(exprs) {
+    constructor(exprs, action) {
         this.exprs = exprs;
+		this.action = action;
     }
 
     /**
@@ -88,17 +115,17 @@ export class Union {
 /**
  * @implements {Node}
  */
-export class Expresion {
+export class Predicate {
     /**
      *
-     * @param {Node} expr
-	 * @param {string=} label
-	 * @param {string=} qty
+     * @param {string} returnType
+	 * @param {string} code
+	 * @param {{ [label: string]: string }=} arguments
      */
-    constructor(expr, label, qty) {
-        this.expr = expr;
-		this.label = label;
-		this.qty = qty;
+    constructor(returnType, code, arguments) {
+        this.returnType = returnType;
+		this.code = code;
+		this.arguments = arguments;
     }
 
     /**
@@ -107,7 +134,130 @@ export class Expresion {
      * @returns {T}
      */
     accept(visitor) {
-        return visitor.visitExpresion(this);
+        return visitor.visitPredicate(this);
+    }
+}
+    
+
+/**
+ * @implements {Node}
+ */
+export class Pluck {
+    /**
+     *
+     * @param {Label} labeledExpr
+	 * @param {boolean=} pluck
+     */
+    constructor(labeledExpr, pluck) {
+        this.labeledExpr = labeledExpr;
+		this.pluck = pluck;
+    }
+
+    /**
+     * @template T
+     * @param {Visitor<T>} visitor
+     * @returns {T}
+     */
+    accept(visitor) {
+        return visitor.visitPluck(this);
+    }
+}
+    
+
+/**
+ * @implements {Node}
+ */
+export class Label {
+    /**
+     *
+     * @param {Annotated} annotatedExpr
+	 * @param {boolean=} label
+     */
+    constructor(annotatedExpr, label) {
+        this.annotatedExpr = annotatedExpr;
+		this.label = label;
+    }
+
+    /**
+     * @template T
+     * @param {Visitor<T>} visitor
+     * @returns {T}
+     */
+    accept(visitor) {
+        return visitor.visitLabel(this);
+    }
+}
+    
+
+/**
+ * @implements {Node}
+ */
+export class Annotated {
+    /**
+     *
+     * @param {Node} expr
+	 * @param {(string|Node)=} qty
+	 * @param {boolean=} text
+     */
+    constructor(expr, qty, text) {
+        this.expr = expr;
+		this.qty = qty;
+		this.text = text;
+    }
+
+    /**
+     * @template T
+     * @param {Visitor<T>} visitor
+     * @returns {T}
+     */
+    accept(visitor) {
+        return visitor.visitAnnotated(this);
+    }
+}
+    
+
+/**
+ * @implements {Node}
+ */
+export class Assertion {
+    /**
+     *
+     * @param {Node} assertion
+     */
+    constructor(assertion) {
+        this.assertion = assertion;
+    }
+
+    /**
+     * @template T
+     * @param {Visitor<T>} visitor
+     * @returns {T}
+     */
+    accept(visitor) {
+        return visitor.visitAssertion(this);
+    }
+}
+    
+
+/**
+ * @implements {Node}
+ */
+export class NegAssertion {
+    /**
+     *
+     * @param {Node} assertion
+     */
+    constructor(assertion) {
+        this.assertion = assertion;
+    }
+
+    /**
+     * @template T
+     * @param {Visitor<T>} visitor
+     * @returns {T}
+     */
+    accept(visitor) {
+        return visitor.visitNegAssertion(this);
     }
 }
     
@@ -165,30 +315,7 @@ export class Clase {
 /**
  * @implements {Node}
  */
-export class literalRango {
-    /**
-     *
-     * @param {string} bottom
-     */
-    constructor(bottom) {
-        this.bottom = bottom;
-    }
-
-    /**
-     * @template T
-     * @param {Visitor<T>} visitor
-     * @returns {T}
-     */
-    accept(visitor) {
-        return visitor.visitliteralRango(this);
-    }
-}
-    
-
-/**
- * @implements {Node}
- */
-export class rango {
+export class Rango {
     /**
      *
      * @param {string} bottom
@@ -205,7 +332,7 @@ export class rango {
      * @returns {T}
      */
     accept(visitor) {
-        return visitor.visitrango(this);
+        return visitor.visitRango(this);
     }
 }
     
@@ -213,7 +340,7 @@ export class rango {
 /**
  * @implements {Node}
  */
-export class idRel {
+export class Identificador {
     /**
      *
      * @param {string} id
@@ -228,7 +355,7 @@ export class idRel {
      * @returns {T}
      */
     accept(visitor) {
-        return visitor.visitidRel(this);
+        return visitor.visitIdentificador(this);
     }
 }
     
@@ -236,7 +363,7 @@ export class idRel {
 /**
  * @implements {Node}
  */
-export class Any {
+export class Punto {
     /**
      *
     
@@ -251,7 +378,7 @@ export class Any {
      * @returns {T}
      */
     accept(visitor) {
-        return visitor.visitAny(this);
+        return visitor.visitPunto(this);
     }
 }
     
@@ -259,7 +386,7 @@ export class Any {
 /**
  * @implements {Node}
  */
-export class finCadena {
+export class Fin {
     /**
      *
     
@@ -274,7 +401,7 @@ export class finCadena {
      * @returns {T}
      */
     accept(visitor) {
-        return visitor.visitfinCadena(this);
+        return visitor.visitFin(this);
     }
 }
     
