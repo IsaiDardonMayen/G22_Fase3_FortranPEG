@@ -1,0 +1,25 @@
+{
+    contains
+
+    subroutine decirHola
+        print *, "Hola desde accion"
+    end subroutine decirHola
+}
+
+suma
+    = str1:letras '+' str2:letras {
+        character(len=:), allocatable :: res
+
+        call decirHola()
+
+        res = str1 // str2  ! Concatenar las dos cadenas
+    }
+
+letras
+    = texto:[a-zA-Z]+ {
+        character(len=:), allocatable :: res
+
+        call decirHola()
+
+        res = texto  ! Almacenar la cadena leída
+    }

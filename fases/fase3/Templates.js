@@ -224,6 +224,13 @@ export const strExpr = (data) => {
                 end do
                 ${data.destination} = consumeInput()
               `;
+        case '?':
+                return `
+                    lexemeStart = cursor
+                    if (.not. ${data.expr}) cycle
+                    ${data.destination} = consumeInput()
+                `;
+                
        default:
            throw new Error(
                `'${data.quantifier}' quantifier needs implementation`
