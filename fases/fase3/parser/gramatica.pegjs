@@ -22,7 +22,7 @@ gramatica
   }
 
 globalCode
-  = "{" _ before:$(. !"contains")+ _ "contains" _ after:$[^}]* "}" {
+  = "{" before:$(. !"contains")* [ \t\n\r]* "contains" [ \t\n\r]* after:$[^}]* "}" {
     return after ? {before, after} : {before}
   }
 
@@ -38,13 +38,18 @@ opciones
   }
 
 union
-  = expr:parsingExpression rest:(_ @parsingExpression !(_ literales? _ "=") )* action:predicate? {
+  = expr:parsingExpression rest:(_ @parsingExpression !(_ literales? _ "=") )* action:(_ @predicate)? {
     const exprs = [expr, ...rest];
-    const labels = exprs.filter(expr => expr.label);
-    if (labels.length > 0) {
-      action.arguments = labels.reduce((args, expr) => {
-        args[expr.label] = expr.expr instanceof n.Identificador ? expr.expr.id : '';
-      }, {});
+    const labeledExprs = exprs
+        .filter((expr) => expr instanceof n.Pluck)
+        .filter((expr) => expr.labeledExpr.label);
+    if (labeledExprs.length > 0) {
+        action.params = labeledExprs.reduce((args, labeled) => {
+            const expr = labeled.labeledExpr.annotatedExpr.expr;
+            args[labeled.labeledExpr.label] =
+                expr instanceof n.Identificador ? expr.id : '';
+            return args;
+        }, {});
     }
     return new n.Union(exprs, action);
   }
@@ -63,7 +68,7 @@ parsingExpression
 
 pluck
   = pluck:"@"? _ expr:label {
-    return new n.Pluck(expr, pluck);
+    return new n.Pluck(expr, pluck ? true : false);
   }
 
 label
@@ -73,7 +78,7 @@ label
 
 annotated
   = text:"$"? _ expr:match _ qty:([?+*]/conteo)? {
-    return new n.Annotated(expr, qty, text)
+    return new n.Annotated(expr, qty, text ? true : false);
   }
 
 match
@@ -82,11 +87,11 @@ match
     return new n.Identificador(id);
   }
   / val:$literales isCase:"i"? {
-    return new n.String(val.replace(/['"]/g, ''), isCase);
+    return new n.String(val.replace(/['"]/g, ''), isCase ? true : false);
   }
   / "(" _ @opciones _ ")"
   / chars:clase isCase:"i"? {
-    return new n.Clase(chars, isCase);
+    return new n.Clase(chars, isCase ? true : false);
   }
   / "." {
     return new n.Punto();
@@ -99,13 +104,13 @@ conteo
   / "|" _ (numero / id:identificador)? _ ".." _ (numero / id2:identificador)? _ "," _ opciones _ "|"
 
 predicate
-  = "{" _ returnType:predicateReturnType code:$[^}]* "}" {
-    return new n.Predicate(returnType, code)
+  = "{" [ \t\n\r]* returnType:predicateReturnType code:$[^}]* "}" {
+    return new n.Predicate(returnType, code, {})
   }
 
 predicateReturnType
-  = t:$[^: ]+ _ "::" _ "res" {
-    return t;
+  = t:$(. !"::")+ [ \t\n\r]* "::" [ \t\n\r]* "res" {
+    return t.trim();
   }
 
 clase
@@ -154,14 +159,11 @@ secuenciaFinLinea = "\r\n" / "\n" / "\r" / "\u2028" / "\u2029"
 //     "\"" [^"]* "\""
 //     / "'" [^']* "'"
     
-
 numero = [0-9]+
 
 identificador = [_a-z]i[_a-z0-9]i* { return text() }
 
-
 _ = (Comentarios /[ \t\n\r])*
-
 
 Comentarios = 
     "//" [^\n]* 

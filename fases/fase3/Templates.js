@@ -162,14 +162,12 @@ export const rule = (data) => `
 export const election = (data) => `
        do i = 0, ${data.exprs.length}
            select case(i)
-           ${data.exprs.map(
-               (expr, i) => `
+           ${data.exprs.map((expr, i) => `
            case(${i})
                cursor = savePoint
                ${expr}
                exit
-           `
-           )}
+           `).join('')}
            case default
                call pegError()
            end select
@@ -218,6 +216,14 @@ export const strExpr = (data) => {
                end do
                ${data.destination} = consumeInput()
            `;
+        case '*':
+              return `
+                lexemeStart = cursor
+                do while (.not. cursor > len(input))
+                     if (.not. ${data.expr}) exit
+                end do
+                ${data.destination} = consumeInput()
+              `;
        default:
            throw new Error(
                `'${data.quantifier}' quantifier needs implementation`
