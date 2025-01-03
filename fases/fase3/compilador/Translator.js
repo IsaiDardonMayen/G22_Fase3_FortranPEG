@@ -260,7 +260,11 @@ export default class FortranTranslator {
      * @this {Visitor}
      */
     visitNegAssertion(node) {
-        console.log("Entrando a visitNegAssertion");
+        const nodeType = node.assertion instanceof CST.Predicate ? 'Predicate' : 'Annotated';
+        return Template.negAssertion({
+            assertionCode: node.assertion.accept(this),
+            nodeType: nodeType
+        });
     }
 
     /**

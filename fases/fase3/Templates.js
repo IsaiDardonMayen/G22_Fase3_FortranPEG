@@ -323,19 +323,7 @@ export const action = (data) => {
 export const assertion = (data) => {
     
         return `
-    logical :: success  
-    savePoint = cursor
-    success = .false.
     ${data.assertionCode}
-    if (success) then
-        cursor = savePoint
-        res = 'true'
-        print *, 'Se guardara: ac'
-    else
-        cursor = savePoint
-        res = 'false'
-        print *, 'No cumple con el patron a&bc'
-        return
-    end if`;
+    `;
     
  };
