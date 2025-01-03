@@ -228,8 +228,9 @@ export default class FortranTranslator {
         } else if (node.qty) {
             const destination = getExprId(this.currentChoice, this.currentExpr);
             const expr = node.expr.accept(this);
+            console.log("Entrando a visitAnnotated");
+            console.log(node.qty);
             
-            // Repetición exacta |n|
             if (typeof node.qty === 'number') {
                 console.log("Entrando a node.qty === 'number'");
                 return Template.fixedRepetition({
@@ -239,8 +240,8 @@ export default class FortranTranslator {
                 });
             }
             // Repetición con rango |min..max|
-            else if (Array.isArray(node.qty) && node.qty.length === 2) {
-                console.log("Entrando a node.qty === 'Array'");
+            else if (Array.isArray(node.qty) && node.qty.length === 2 && typeof node.qty[0] === 'number' && typeof node.qty[1] === 'number') {
+                console.log("Entrando a node.qty === 'Array' con rango");
                 return Template.rangeRepetition({
                     min: node.qty[0],
                     max: node.qty[1],
@@ -249,13 +250,23 @@ export default class FortranTranslator {
                 });
             }
             // Repetición con separador |n, 'sep'|
-            else if (Array.isArray(node.qty) && node.qty.length === 3) {
-                console.log("Entrando a node.qty === 'Array' 2");
+            else if (Array.isArray(node.qty) && node.qty.length === 3 && typeof node.qty[0] === 'number' && typeof node.qty[2] === 'string') {
+                console.log("Entrando a node.qty === 'Array' con separador");
                 return Template.separatorRepetition({
                     times: node.qty[0],
                     separator: node.qty[2],
                     expr: expr,
                     destination: destination
+                });
+            }
+            // Caso donde qty tiene una estructura más compleja
+            else if (Array.isArray(node.qty) && node.qty.length === 5 && node.qty[0] === '|' && Array.isArray(node.qty[1]) && Array.isArray(node.qty[3])) {
+                console.log("Entrando a node.qty con estructura compleja");
+                // Aquí puedes añadir la lógica específica para manejar este caso.
+                return Template.customRepetition({
+                    expr: expr,
+                    destination: destination,
+                    qty: node.qty
                 });
             }
         } else {
