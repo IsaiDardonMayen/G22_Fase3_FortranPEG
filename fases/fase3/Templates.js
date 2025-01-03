@@ -1,3 +1,5 @@
+
+
 /**
  *
  * @param {{
@@ -319,9 +321,11 @@ export const action = (data) => {
 * @returns {string}
 */
 export const assertion = (data) => {
-    if (data.nodeType === 'Predicate') {
+    
         return `
+    logical :: success  
     savePoint = cursor
+    success = .false.
     ${data.assertionCode}
     if (success) then
         cursor = savePoint
@@ -333,5 +337,5 @@ export const assertion = (data) => {
         print *, 'No cumple con el patron a&bc'
         return
     end if`;
-    } 
+    
  };
