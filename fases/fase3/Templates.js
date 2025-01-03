@@ -112,7 +112,7 @@ module parser
    subroutine pegError()
         print '(A,I0,A)', "Error at ", cursor, ": '"//input(cursor:cursor)//"'"
 
-       call exit(1)
+       
    end subroutine pegError
 
    function intToStr(int) result(cast)
@@ -321,6 +321,21 @@ export const action = (data) => {
 * @returns {string}
 */
 export const assertion = (data) => {
+    
+        return `
+    ${data.assertionCode}
+    `;
+    
+ };
+
+/**
+ * @param {{
+*   assertionCode: string;
+*   nodeType: 'Annotated' | 'Predicate';
+* }} data
+* @returns {string}
+*/
+export const negAssertion = (data) => {
     
         return `
     ${data.assertionCode}

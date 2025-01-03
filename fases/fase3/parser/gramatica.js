@@ -321,10 +321,12 @@ function peg$parse(input, options) {
     }
     return new n.Union(exprs, action);
   };
-  var peg$f5 = function(assertion) {
-    return new n.NegAssertion(assertion);
+  var peg$f5 = function(NegAssertion) {
+    console.log("aqii toyy en neg");
+    return new n.NegAssertion(NegAssertion);
   };
   var peg$f6 = function(assertion) {
+    console.log("aqii toyy en ass");
     return new n.Assertion(assertion);
   };
   var peg$f7 = function() {

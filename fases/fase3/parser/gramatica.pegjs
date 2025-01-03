@@ -65,10 +65,12 @@ union
 
 parsingExpression
   = pluck
-  / '!' assertion:(annotated/predicate) {
-    return new n.NegAssertion(assertion);
+  / '!' NegAssertion:(annotated/predicate) {
+    console.log("aqii toyy en neg");
+    return new n.NegAssertion(NegAssertion);
   }
   / '&' assertion:(annotated/predicate) {
+    console.log("aqii toyy en ass");
     return new n.Assertion(assertion);
   }
   / "!." {

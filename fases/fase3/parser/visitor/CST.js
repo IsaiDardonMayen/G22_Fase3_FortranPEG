@@ -268,10 +268,10 @@ export class Assertion {
 export class NegAssertion {
     /**
      *
-     * @param {(Annotated|Predicate)} assertion
+     * @param {(Annotated|Predicate)} NegAssertion
      */
-    constructor(assertion) {
-        this.assertion = assertion;
+    constructor(NegAssertion) {
+        this.NegAssertion = NegAssertion;
     }
 
     /**
@@ -379,29 +379,6 @@ export class Identificador {
      */
     accept(visitor) {
         return visitor.visitIdentificador(this);
-    }
-}
-    
-
-/**
- * @implements {Node}
- */
-export class Exclamacion {
-    /**
-     *
-     * @param {Annotated} expr
-     */
-    constructor(expr) {
-        this.expr = expr;
-    }
-
-    /**
-     * @template T
-     * @param {Visitor<T>} visitor
-     * @returns {T}
-     */
-    accept(visitor) {
-        return visitor.visitExclamacion(this);
     }
 }
     
