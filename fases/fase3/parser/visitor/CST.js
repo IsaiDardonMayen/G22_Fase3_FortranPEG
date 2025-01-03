@@ -268,10 +268,10 @@ export class Assertion {
 export class NegAssertion {
     /**
      *
-     * @param {(Annotated|Predicate)} NegAssertion
+     * @param {(Annotated|Predicate)} assertion
      */
-    constructor(NegAssertion) {
-        this.NegAssertion = NegAssertion;
+    constructor(assertion) {
+        this.assertion = assertion;
     }
 
     /**

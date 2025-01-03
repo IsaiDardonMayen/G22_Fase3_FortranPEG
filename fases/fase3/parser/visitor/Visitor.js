@@ -191,15 +191,6 @@ export default class Visitor {
      * @param {Node} node
      * @returns {T}
      */
-    visitExclamacion(node){
-        throw new Error('Implement in subclass');
-    }
-	
-    /**
-     * @abstract
-     * @param {Node} node
-     * @returns {T}
-     */
     visitPunto(node){
         throw new Error('Implement in subclass');
     }

@@ -322,11 +322,11 @@ function peg$parse(input, options) {
     return new n.Union(exprs, action);
   };
   var peg$f5 = function(NegAssertion) {
-    console.log("aqii toyy en neg");
+ 
     return new n.NegAssertion(NegAssertion);
   };
   var peg$f6 = function(assertion) {
-    console.log("aqii toyy en ass");
+
     return new n.Assertion(assertion);
   };
   var peg$f7 = function() {
@@ -991,32 +991,32 @@ function peg$parse(input, options) {
   function peg$parseparsingExpression() {
     var s0, s1, s2;
 
-    s0 = peg$parsepluck();
-    if (s0 === peg$FAILED) {
-      s0 = peg$currPos;
-      if (input.charCodeAt(peg$currPos) === 33) {
-        s1 = peg$c6;
-        peg$currPos++;
-      } else {
-        s1 = peg$FAILED;
-        if (peg$silentFails === 0) { peg$fail(peg$e9); }
+    s0 = peg$currPos;
+    if (input.charCodeAt(peg$currPos) === 33) {
+      s1 = peg$c6;
+      peg$currPos++;
+    } else {
+      s1 = peg$FAILED;
+      if (peg$silentFails === 0) { peg$fail(peg$e9); }
+    }
+    if (s1 !== peg$FAILED) {
+      s2 = peg$parseannotated();
+      if (s2 === peg$FAILED) {
+        s2 = peg$parsepredicate();
       }
-      if (s1 !== peg$FAILED) {
-        s2 = peg$parseannotated();
-        if (s2 === peg$FAILED) {
-          s2 = peg$parsepredicate();
-        }
-        if (s2 !== peg$FAILED) {
-          peg$savedPos = s0;
-          s0 = peg$f5(s2);
-        } else {
-          peg$currPos = s0;
-          s0 = peg$FAILED;
-        }
+      if (s2 !== peg$FAILED) {
+        peg$savedPos = s0;
+        s0 = peg$f5(s2);
       } else {
         peg$currPos = s0;
         s0 = peg$FAILED;
       }
+    } else {
+      peg$currPos = s0;
+      s0 = peg$FAILED;
+    }
+    if (s0 === peg$FAILED) {
+      s0 = peg$parsepluck();
       if (s0 === peg$FAILED) {
         s0 = peg$currPos;
         if (input.charCodeAt(peg$currPos) === 38) {
