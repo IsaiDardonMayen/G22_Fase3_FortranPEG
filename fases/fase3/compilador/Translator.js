@@ -213,8 +213,8 @@ export default class FortranTranslator {
      */
     visitAnnotated(node) {
         if (node.qty && typeof node.qty === 'string') {
+            // Manejo de cuantificadores (?, *, +)
             if (node.expr instanceof CST.Identificador) {
-                // TODO: Implement quantifiers (i.e., ?, *, +)
                 return `${getExprId(
                     this.currentChoice,
                     this.currentExpr
@@ -226,8 +226,38 @@ export default class FortranTranslator {
                 destination: getExprId(this.currentChoice, this.currentExpr),
             });
         } else if (node.qty) {
-            // TODO: Implement repetitions (e.g., |3|, |1..3|, etc...)
-            throw new Error('Repetitions not implemented.');
+            const destination = getExprId(this.currentChoice, this.currentExpr);
+            const expr = node.expr.accept(this);
+            
+            // Repetición exacta |n|
+            if (typeof node.qty === 'number') {
+                console.log("Entrando a node.qty === 'number'");
+                return Template.fixedRepetition({
+                    times: node.qty,
+                    expr: expr,
+                    destination: destination
+                });
+            }
+            // Repetición con rango |min..max|
+            else if (Array.isArray(node.qty) && node.qty.length === 2) {
+                console.log("Entrando a node.qty === 'Array'");
+                return Template.rangeRepetition({
+                    min: node.qty[0],
+                    max: node.qty[1],
+                    expr: expr,
+                    destination: destination
+                });
+            }
+            // Repetición con separador |n, 'sep'|
+            else if (Array.isArray(node.qty) && node.qty.length === 3) {
+                console.log("Entrando a node.qty === 'Array' 2");
+                return Template.separatorRepetition({
+                    times: node.qty[0],
+                    separator: node.qty[2],
+                    expr: expr,
+                    destination: destination
+                });
+            }
         } else {
             if (node.expr instanceof CST.Identificador) {
                 return `${getExprId(

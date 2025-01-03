@@ -342,3 +342,28 @@ export const negAssertion = (data) => {
     `;
     
  };
+
+ export const fixedRepetition = ({ times, expr, destination }) => `
+do i = 1, ${times}
+    ${destination} = ${expr}
+    if (.not. succeeded) cycle
+end do
+`;
+
+export const rangeRepetition = ({ min, max, expr, destination }) => `
+count = random_int(${min}, ${max})
+do i = 1, count
+    ${destination} = ${expr}
+    if (.not. succeeded) cycle
+end do
+`;
+
+export const separatorRepetition = ({ times, separator, expr, destination }) => `
+do i = 1, ${times}
+    ${destination} = ${expr}
+    if (.not. succeeded) cycle
+    if (i < ${times}) then
+        if (.not. acceptString('${separator}')) cycle
+    end if
+end do
+`;
