@@ -64,13 +64,13 @@ union
   }
 
 parsingExpression
-  = pluck
-  / '!' NegAssertion:(annotated/predicate) {
-    console.log("aqii toyy en neg");
+  = '!' NegAssertion:(annotated/predicate) {
+ 
     return new n.NegAssertion(NegAssertion);
   }
+  / pluck
   / '&' assertion:(annotated/predicate) {
-    console.log("aqii toyy en ass");
+
     return new n.Assertion(assertion);
   }
   / "!." {

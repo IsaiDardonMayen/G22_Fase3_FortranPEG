@@ -111,7 +111,7 @@ module parser
 
    subroutine pegError()
         print '(A,I0,A)', "Error at ", cursor, ": '"//input(cursor:cursor)//"'"
-
+        call exit(1)
        
    end subroutine pegError
 
@@ -338,7 +338,7 @@ export const assertion = (data) => {
 export const negAssertion = (data) => {
     
         return `
-    ${data.assertionCode}
+
     `;
     
  };
