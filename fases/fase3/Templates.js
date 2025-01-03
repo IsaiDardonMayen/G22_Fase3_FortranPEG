@@ -314,17 +314,24 @@ export const action = (data) => {
 /**
  * @param {{
 *   assertionCode: string;
+*   nodeType: 'Annotated' | 'Predicate';
 * }} data
 * @returns {string}
 */
-export const negAssertion = (data) => `
-   savePoint = cursor
-   ${data.assertionCode}
-   if (res) then
-       cursor = savePoint
-       res = .false.
-       return
-   end if
-   cursor = savePoint
-   res = .true.
-`;
+export const assertion = (data) => {
+    if (data.nodeType === 'Predicate') {
+        return `
+    savePoint = cursor
+    ${data.assertionCode}
+    if (success) then
+        cursor = savePoint
+        res = 'true'
+        print *, 'Se guardara: ac'
+    else
+        cursor = savePoint
+        res = 'false'
+        print *, 'No cumple con el patron a&bc'
+        return
+    end if`;
+    } 
+ };

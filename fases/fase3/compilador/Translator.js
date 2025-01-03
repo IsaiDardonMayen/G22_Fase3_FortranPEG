@@ -247,7 +247,12 @@ export default class FortranTranslator {
      * @this {Visitor}
      */
     visitAssertion(node) {
-        throw new Error('Method not implemented.');
+        console.log("Entrando a visitAssertion");
+        const nodeType = node.assertion instanceof CST.Predicate ? 'Predicate' : 'Annotated';
+        return Template.assertion({
+            assertionCode: node.assertion.accept(this),
+            nodeType: nodeType
+        });
     }
 
     /**
@@ -255,9 +260,7 @@ export default class FortranTranslator {
      * @this {Visitor}
      */
     visitNegAssertion(node) {
-        return Template.negAssertion({
-            assertionCode: node.assertion.accept(this)
-        });
+        console.log("Entrando a visitNegAssertion");
     }
 
     /**
