@@ -245,7 +245,7 @@ export class Annotated {
 export class Assertion {
     /**
      *
-     * @param {Node} assertion
+     * @param {(Annotated|Predicate)} assertion
      */
     constructor(assertion) {
         this.assertion = assertion;
@@ -268,7 +268,7 @@ export class Assertion {
 export class NegAssertion {
     /**
      *
-     * @param {Node} assertion
+     * @param {(Annotated|Predicate)} assertion
      */
     constructor(assertion) {
         this.assertion = assertion;
