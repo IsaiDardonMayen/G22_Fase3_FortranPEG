@@ -108,7 +108,7 @@ module parser
    end function consumeInput
 
    subroutine pegError()
-       print '(A,I1,A)', "Error at ", cursor, ": '"//input(cursor:cursor)//"'"
+        print '(A,I0,A)', "Error at ", cursor, ": '"//input(cursor:cursor)//"'"
 
        call exit(1)
    end subroutine pegError
@@ -183,18 +183,22 @@ function peg_${data.id}() result (res)
 * @returns
 */
 export const election = (data) => `
-       do i = 0, ${data.exprs.length}
-           select case(i)
-           ${data.exprs.map((expr, i) => `
-           case(${i})
-               cursor = savePoint
-               ${expr}
-               exit
-           `).join('')}
-           case default
-               call pegError()
-           end select
-       end do
+        do i = 0, ${data.exprs.length}
+            select case(i)
+            ${data.exprs
+                .map(
+                    (expr, i) => `
+            case(${i})
+                cursor = savePoint
+                ${expr}
+                exit
+            `
+                )
+                .join('\n')}
+            case default
+                call pegError()
+            end select
+        end do
 `;
 
 /**
