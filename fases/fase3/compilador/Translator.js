@@ -255,7 +255,9 @@ export default class FortranTranslator {
      * @this {Visitor}
      */
     visitNegAssertion(node) {
-        throw new Error('Method not implemented.');
+        return Template.negAssertion({
+            assertionCode: node.assertion.accept(this)
+        });
     }
 
     /**
@@ -341,15 +343,4 @@ export default class FortranTranslator {
         return 'if (.not. acceptEOF()) cycle';
     }
 
-    /**
-     * @param {CST.Exclamacion} node
-     * @this {Visitor}
-     */
-    visitExclamacion(node) {
-        if (node.expr instanceof CST.Annotated) {
-            node.expr.expr.accept(this);
-        } else {
-            node.expr.accept(this);
-        }
-    }
 }

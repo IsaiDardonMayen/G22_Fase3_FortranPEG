@@ -312,13 +312,19 @@ export const action = (data) => {
 };
 
 /**
-*
-* @param {CST.Exclamacion} node
-* @returns
+ * @param {{
+*   assertionCode: string;
+* }} data
+* @returns {string}
 */
-export const exclamacionNode = (node) => {
-    const expr = node.expr instanceof CST.Annotated ? node.expr.expr : node.expr;
-    return `
-        call ${expr.accept(this)}
-    `;
-};
+export const negAssertion = (data) => `
+   savePoint = cursor
+   ${data.assertionCode}
+   if (res) then
+       cursor = savePoint
+       res = .false.
+       return
+   end if
+   cursor = savePoint
+   res = .true.
+`;
