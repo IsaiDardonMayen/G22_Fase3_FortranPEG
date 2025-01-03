@@ -61,6 +61,7 @@ export default class FortranTranslator {
      * @this {Visitor}
      */
     visitRegla(node) {
+       
         this.currentRule = node.id;
         this.currentChoice = 0;
 
@@ -94,7 +95,43 @@ export default class FortranTranslator {
 
         return ruleTranslation;
     }
+/**
+     * @param {CST.Parentesis} node
+     * @this {Visitor}
+     */
 
+    visitParentesis(node) {
+        this.currentChoice = 0;
+
+        if (node.start) this.translatingStart = true;
+    
+
+        const parentesisTranslation = Template.parentesis({
+            exprDeclarations: node.expr.exprs.flatMap((election, i) =>
+                election.exprs
+                    .filter((expr) => expr instanceof CST.Pluck)
+                    .map((label, j) => {
+                        const expr = label.labeledExpr.annotatedExpr.expr;
+                        return `${
+                            expr instanceof CST.Identificador
+                                ? getReturnType(
+                                      getActionId(expr.id, i),
+                                      this.actionReturnTypes
+                                  )
+                                : 'character(len=:), allocatable'
+                        } :: expr_${i}_${j}`;
+                    })
+            ),
+            expr: node.expr.accept(this),
+        });
+
+        this.translatingStart = false;
+
+        console.log(parentesisTranslation);
+        return parentesisTranslation;
+
+        
+    }
     /**
      * @param {CST.Opciones} node
      * @this {Visitor}
@@ -302,5 +339,17 @@ export default class FortranTranslator {
      */
     visitFin(node) {
         return 'if (.not. acceptEOF()) cycle';
+    }
+
+    /**
+     * @param {CST.Exclamacion} node
+     * @this {Visitor}
+     */
+    visitExclamacion(node) {
+        if (node.expr instanceof CST.Annotated) {
+            node.expr.expr.accept(this);
+        } else {
+            node.expr.accept(this);
+        }
     }
 }

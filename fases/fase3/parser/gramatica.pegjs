@@ -40,16 +40,25 @@ opciones
 union
   = expr:parsingExpression rest:(_ @parsingExpression !(_ literales? _ "=") )* action:(_ @predicate)? {
     const exprs = [expr, ...rest];
-    const labeledExprs = exprs
-        .filter((expr) => expr instanceof n.Pluck)
-        .filter((expr) => expr.labeledExpr.label);
-    if (labeledExprs.length > 0) {
-        action.params = labeledExprs.reduce((args, labeled) => {
-            const expr = labeled.labeledExpr.annotatedExpr.expr;
-            args[labeled.labeledExpr.label] =
-                expr instanceof n.Identificador ? expr.id : '';
-            return args;
-        }, {});
+    if (action) {
+      action.params = action.params || {};
+      const getLabeledExpr = (e) => {
+        if (e instanceof n.Pluck) return e;
+        if (e instanceof n.Parentesis) {
+          return e.expr.exprs[0].exprs.find(x => x instanceof n.Pluck);
+        }
+        return null;
+      };
+      
+      const labeledExprs = exprs
+        .map(getLabeledExpr)
+        .filter(e => e && e.labeledExpr && e.labeledExpr.label);
+
+      labeledExprs.forEach(labeled => {
+        const expr = labeled.labeledExpr.annotatedExpr.expr;
+        action.params[labeled.labeledExpr.label] = 
+          expr instanceof n.Identificador ? expr.id : '';
+      });
     }
     return new n.Union(exprs, action);
   }
@@ -80,6 +89,9 @@ annotated
   = text:"$"? _ expr:match _ qty:([?+*]/conteo)? {
     return new n.Annotated(expr, qty, text ? true : false);
   }
+  / text:"!" _ expr:match _ qty:([?+*]/conteo)? {
+    return new n.Annotated(expr, qty, text ? true : false);
+  }
 
 match
   = id:identificador {
@@ -89,7 +101,9 @@ match
   / val:$literales isCase:"i"? {
     return new n.String(val.replace(/['"]/g, ''), isCase ? true : false);
   }
-  / "(" _ @opciones _ ")"
+  / "(" _ exprs:opciones _ ")" {
+    return new n.Parentesis(exprs);
+  }
   / chars:clase isCase:"i"? {
     return new n.Clase(chars, isCase ? true : false);
   }

@@ -67,6 +67,29 @@ export class Regla {
 /**
  * @implements {Node}
  */
+export class Parentesis {
+    /**
+     *
+     * @param {Opciones} expr
+     */
+    constructor(expr) {
+        this.expr = expr;
+    }
+
+    /**
+     * @template T
+     * @param {Visitor<T>} visitor
+     * @returns {T}
+     */
+    accept(visitor) {
+        return visitor.visitParentesis(this);
+    }
+}
+    
+
+/**
+ * @implements {Node}
+ */
 export class Opciones {
     /**
      *
@@ -356,6 +379,29 @@ export class Identificador {
      */
     accept(visitor) {
         return visitor.visitIdentificador(this);
+    }
+}
+    
+
+/**
+ * @implements {Node}
+ */
+export class Exclamacion {
+    /**
+     *
+     * @param {Annotated} expr
+     */
+    constructor(expr) {
+        this.expr = expr;
+    }
+
+    /**
+     * @template T
+     * @param {Visitor<T>} visitor
+     * @returns {T}
+     */
+    accept(visitor) {
+        return visitor.visitExclamacion(this);
     }
 }
     

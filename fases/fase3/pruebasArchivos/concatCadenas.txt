@@ -7,7 +7,7 @@
 }
 
 suma
-    = str1:letras '+' str2:letras {
+    = (str1:letras '+' str2:letras) {
         character(len=:), allocatable :: res
 
         call decirHola()

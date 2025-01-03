@@ -74,6 +74,15 @@ export default class Visitor {
      * @param {Node} node
      * @returns {T}
      */
+    visitParentesis(node){
+        throw new Error('Implement in subclass');
+    }
+	
+    /**
+     * @abstract
+     * @param {Node} node
+     * @returns {T}
+     */
     visitOpciones(node){
         throw new Error('Implement in subclass');
     }
@@ -174,6 +183,15 @@ export default class Visitor {
      * @returns {T}
      */
     visitIdentificador(node){
+        throw new Error('Implement in subclass');
+    }
+	
+    /**
+     * @abstract
+     * @param {Node} node
+     * @returns {T}
+     */
+    visitExclamacion(node){
         throw new Error('Implement in subclass');
     }
 	

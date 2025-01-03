@@ -153,6 +153,29 @@ export const rule = (data) => `
 `;
 
 /**
+ *  @param {{
+ * expr: string;
+ * }} data
+ * @returns
+ * */
+
+export const parentesis = (data) =>
+    `
+function peg_${data.id}() result (res)
+       ${data.returnType} :: res
+       ${data.exprDeclarations.join('\n')}
+       integer :: i
+
+       savePoint = cursor
+       ${data.expr}
+   end function peg_${data.id}
+   
+`;
+
+
+
+
+/**
 *
 * @param {{
 *  exprs: string[]
@@ -282,4 +305,16 @@ export const action = (data) => {
        ${data.code}
    end function peg_${data.ruleId}_f${data.choice}
    `;
+};
+
+/**
+*
+* @param {CST.Exclamacion} node
+* @returns
+*/
+export const exclamacionNode = (node) => {
+    const expr = node.expr instanceof CST.Annotated ? node.expr.expr : node.expr;
+    return `
+        call ${expr.accept(this)}
+    `;
 };
